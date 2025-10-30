@@ -1,0 +1,9 @@
+echo "🔍 Running Prettier and ESLint (staged only)..."
+
+pnpm lint-staged
+
+echo "🔍 Running TypeScript type check..."
+
+pnpm run type-check
+
+echo "✅ All checks passed!"
