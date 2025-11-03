@@ -1,7 +1,4 @@
-import { ChartBarInteractive } from '@/components/BarChart';
-import { ChartRadarDots } from '@/components/RadarChart';
 import Searchbar from '@/components/Searchbar';
-import UserCard from '@/components/UserCard';
 
 export default function Page() {
   return (
@@ -15,9 +12,6 @@ export default function Page() {
       </section>
 
       <Searchbar />
-      <UserCard />
-      <ChartBarInteractive />
-      <ChartRadarDots />
     </main>
   );
 }
