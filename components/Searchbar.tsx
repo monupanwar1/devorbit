@@ -3,6 +3,7 @@
 import { getUserData, GithubUser } from '@/actions/github';
 import { Loader2, Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { RepoCommitChart } from './BarChart';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import UserCard from './UserCard';
@@ -68,8 +69,9 @@ export default function Searchbar() {
           )}
         </Button>
       </div>
-      <div className="w-full">
+      <div className="w-full gap-4">
         <UserCard user={user} />
+        if(user){<RepoCommitChart username={username} />}
       </div>
     </section>
   );
