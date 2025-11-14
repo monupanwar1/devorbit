@@ -1,107 +1,80 @@
 'use server';
 
-export interface GithubUser {
+interface GithubUser {
   avatar_url: string;
   login: string;
   html_url: string;
-  email: string;
-  blog: string;
-  location: string;
-  name: string;
-  bio: string;
-  followers: string;
-  following: string;
-  public_repos: string;
+  email: string | null;
+  blog: string | null;
+  location: string | null;
+  name: string | null;
+  bio: string | null;
+  followers: number;
+  following: number;
+  public_repos: number;
 }
 
-export async function getUserData(
-  username: string,
-): Promise<GithubUser | null> {
-  try {
-    const res = await fetch(`https://api.github.com/users/${username}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return null;
-
-    return res.json();
-  } catch {
-    return null;
-  }
+interface Insight {
+  metric: string;
+  value: number;
 }
 
-export interface RepoCommitStat {
+interface TopRepo {
   repo: string;
   commits: number;
+  stars: number;
+  forks: number;
 }
 
-export async function getRepoCommitStats(
+interface ActivityPoint {
+  month: string;
+  events: number;
+}
+
+interface GithubAnalytics {
+  user: GithubUser;
+  insights: Insight[];
+  topRepos: TopRepo[];
+  commitsTotal: number;
+  activity: ActivityPoint[];
+}
+
+/**
+ * Fetches merged GitHub analytics data via local API route.
+ * Calls /api/github?username=<name>
+ * Works automatically on localhost or production.
+ */
+export async function getGithubAnalytics(
   username: string,
-): Promise<RepoCommitStat[]> {
-  if (!username) return [];
+): Promise<GithubAnalytics | null> {
+  if (!username) return null;
 
-  // GitHub requires a User-Agent header even for public API calls
-  const headers: Record<string, string> = {
-    Accept: 'application/vnd.github+json',
-    'User-Agent': 'DevOrbit-App',
-  };
+  try {
+    // ✅ Automatically resolve correct base (localhost in dev, origin in prod)
+    const baseUrl =
+      process.env.NODE_ENV === 'production'
+        ? 'https://your-production-domain.vercel.app' // optional, auto override when deployed
+        : 'http://localhost:3000';
 
-  // 🧩 Step 1: Fetch public repositories (first 100)
-  const reposRes = await fetch(
-    `https://api.github.com/users/${username}/repos?per_page=100&type=owner&sort=updated`,
-    { headers, next: { revalidate: 600 } }, // Cache for 10 mins
-  );
+    // ⚡ Call the optimized 2-call API route
+    const res = await fetch(`${baseUrl}/api/github?username=${username}`, {
+      method: 'GET',
+      cache: 'no-store',
+    });
 
-  if (!reposRes.ok) {
-    console.error(
-      `❌ Failed to fetch repositories for ${username}: ${reposRes.status}`,
-    );
-    return [];
+    if (!res.ok) {
+      console.error(
+        '❌ Failed to fetch analytics:',
+        res.status,
+        res.statusText,
+      );
+      return null;
+    }
+
+    const data: GithubAnalytics = await res.json();
+    return data;
+  } catch (err) {
+    console.error('⚠️ Error fetching GitHub analytics:', err);
+    return null;
   }
-
-  const repos = await reposRes.json();
-  if (!Array.isArray(repos) || repos.length === 0) return [];
-
-  // 🧩 Step 2: Limit to top 10 most recently updated repos
-  const targetRepos = repos.slice(0, 10);
-
-  // 🧩 Step 3: Fetch commit counts concurrently
-  const commitStats = await Promise.all(
-    targetRepos.map(
-      async (repo: { owner: { login: string }; name: string }) => {
-        const owner = repo.owner.login;
-        const name = repo.name;
-
-        try {
-          const res = await fetch(
-            `https://api.github.com/repos/${owner}/${name}/commits?author=${username}&per_page=1`,
-            { headers },
-          );
-          scroll;
-
-          if (!res.ok) return { repo: name, commits: 0 };
-
-          const link = res.headers.get('link');
-          let count = 0;
-
-          if (link) {
-            const match = link.match(/&page=(\d+)>; rel="last"/);
-            if (match) count = parseInt(match[1]);
-          } else {
-            const commits = await res.json();
-            count = Array.isArray(commits) ? commits.length : 0;
-          }
-
-          return { repo: name, commits: count };
-        } catch (err) {
-          console.error(`⚠️ Error fetching commits for ${name}:`, err);
-          return { repo: name, commits: 0 };
-        }
-      },
-    ),
-  );
-
-  // 🧩 Step 4: Sort repos by commit count (descending)
-  return commitStats
-    .filter((r) => r.commits >= 0)
-    .sort((a, b) => b.commits - a.commits);
 }
