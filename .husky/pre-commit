@@ -1,9 +1,40 @@
-echo "🔍 Running Prettier and ESLint (staged only)..."
+#!/bin/bash
 
-pnpm lint-staged
+# Color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-echo "🔍 Running TypeScript type check..."
+echo -e "${BLUE}🚀 Running pre-commit checks...${NC}"
 
-pnpm run type-check
+# 1. Prettier (auto-fix)
+echo -e "\n${YELLOW}💄 Formatting code...${NC}"
+pnpm format || {
+  echo -e "${RED}❌ Prettier failed${NC}"
+  exit 1
+}
+git add -u
+echo -e "${GREEN}✅ Formatting done${NC}"
 
-echo "✅ All checks passed!"
+# 2. ESLint (auto-fix + check)
+echo -e "\n${YELLOW}🔍 Running ESLint...${NC}"
+pnpm lint:fix || true
+git add -u
+
+if ! pnpm lint; then
+  echo -e "${RED}❌ ESLint errors found. Fix them before commit.${NC}"
+  exit 1
+fi
+echo -e "${GREEN}✅ ESLint passed${NC}"
+
+# 3. TypeScript check
+echo -e "\n${YELLOW}📝 Type checking...${NC}"
+if ! pnpm exec tsc --noEmit; then
+  echo -e "${RED}❌ TypeScript errors found${NC}"
+  exit 1
+fi
+echo -e "${GREEN}✅ Type check passed${NC}"
+
+echo -e "\n${GREEN}🎉 All checks passed!${NC}"
