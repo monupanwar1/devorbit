@@ -1,43 +1,45 @@
 'use server';
 
-interface GithubUser {
-  avatar_url: string;
-  login: string;
-  html_url: string;
-  email: string | null;
-  blog: string | null;
-  location: string | null;
-  name: string | null;
-  bio: string | null;
-  followers: number;
-  following: number;
-  public_repos: number;
-}
+import { GithubAnalytics } from '@/types/type';
 
-interface Insight {
-  metric: string;
-  value: number;
-}
+// interface GithubUser {
+//   avatar_url: string;
+//   login: string;
+//   html_url: string;
+//   email: string | null;
+//   blog: string | null;
+//   location: string | null;
+//   name: string | null;
+//   bio: string | null;
+//   followers: number;
+//   following: number;
+//   public_repos: number;
+// }
 
-interface TopRepo {
-  repo: string;
-  commits: number;
-  stars: number;
-  forks: number;
-}
+// interface Insight {
+//   metric: string;
+//   value: number;
+// }
 
-interface ActivityPoint {
-  month: string;
-  events: number;
-}
+// interface TopRepo {
+//   repo: string;
+//   commits: number;
+//   stars: number;
+//   forks: number;
+// }
 
-interface GithubAnalytics {
-  user: GithubUser;
-  insights: Insight[];
-  topRepos: TopRepo[];
-  commitsTotal: number;
-  activity: ActivityPoint[];
-}
+// interface ActivityPoint {
+//   month: string;
+//   events: number;
+// }
+
+// interface GithubAnalytics {
+//   user: GithubUser;
+//   insights: Insight[];
+//   topRepos: TopRepo[];
+//   commitsTotal: number;
+//   activity: ActivityPoint[];
+// }
 
 /**
  * Fetches merged GitHub analytics data via local API route.

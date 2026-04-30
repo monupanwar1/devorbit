@@ -1,11 +1,12 @@
 import Link from 'next/link';
+
 import { Button } from './ui/button';
 
 export default function Navbar() {
   return (
-    <header className="fixed top-0 left-0 w-full z-50 px-3 md:px-10 py-2 md:py-4 ">
+    <header className="fixed top-0 left-0 z-50 w-full px-3 py-2 md:px-10 md:py-4">
       <nav
-        className="backdrop-blur-2xl bg-accent rounded-md px-6 py-3 flex items-center justify-between shadow-5xl"
+        className="bg-accent shadow-5xl flex items-center justify-between rounded-md px-6 py-3 backdrop-blur-2xl"
         aria-label="Main navigation"
       >
         <Link href="/" className="text-xl font-semibold">

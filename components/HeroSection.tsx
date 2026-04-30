@@ -1,14 +1,17 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
+
 import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
+
 import { Badge } from './ui/badge';
 
 export default function HeroSection() {
   return (
-    <section className="w-full min-h-screen flex flex-col items-center justify-center text-center px-6 space-y-4">
+    <section className="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-6 text-center">
       <Badge variant="secondary">
         <Sparkles className="text-amber-300" /> Beta Now Live! Get Early Access
       </Badge>
@@ -16,7 +19,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-5xl md:text-7xl  text-[#082546] font-bold tracking-tight mb-4 "
+        className="mb-4 text-5xl font-bold tracking-tight text-[#082546] md:text-7xl"
       >
         DevOrbit
       </motion.h1>
@@ -25,7 +28,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="text-lg md:text-xl text-[#7E8696] max-w-2xl "
+        className="max-w-2xl text-lg text-[#7E8696] md:text-xl"
       >
         Turn your GitHub activity into a live dashboard — powered by AI
         insights, trends, and reports. Built for developers, by developers.
@@ -51,7 +54,7 @@ export default function HeroSection() {
         className="flex gap-4"
       >
         <Link href="/dashboard">
-          <Button className="px-6 py-3 text-lg font-semibold rounded-xl #0A2B57 transition-all">
+          <Button className="#0A2B57 rounded-xl px-6 py-3 text-lg font-semibold transition-all">
             Get Started
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>

@@ -2,10 +2,10 @@ import Searchbar from '@/components/Searchbar';
 
 export default function Page() {
   return (
-    <main className="py-20 space-y-4 max-w-7xl min-h-svh mx-auto flex flex-col px-4">
-      <section className="container flex items-center justify-center flex-col mt-10 space-y-2">
-        <h1 className="text-3xl md:text-5xl font-bold">Dashboard</h1>
-        <p className="text-lg text-muted-foreground">
+    <main className="mx-auto flex min-h-svh max-w-7xl flex-col space-y-4 px-4 py-20">
+      <section className="container mt-10 flex flex-col items-center justify-center space-y-2">
+        <h1 className="text-3xl font-bold md:text-5xl">Dashboard</h1>
+        <p className="text-muted-foreground text-lg">
           Welcome to your dashboard! Here you can find an overview of your
           account and recent activity.
         </p>

@@ -1,5 +1,7 @@
 'use client';
-import { Button } from '@/components/ui/button';
+
+import Link from 'next/link';
+
 import {
   Card,
   CardContent,
@@ -10,67 +12,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-// import { Github } from '@deemlol/next-icons';
-// import { useState } from 'react';
-
-// import { useRouter } from 'next/navigation';
-
-// import { authClient } from '@/lib/auth-client';
-import { Terminal } from 'lucide-react';
-import Link from 'next/link';
-import { Alert, AlertDescription } from './ui/alert';
-// import { Spinner } from './ui/spinner';
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  // const router = useRouter();
-
-  // const [fullname, setFullname] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-
-  // const [error, setError] = useState('');
-  // const [loading, setLoading] = useState(false);
-
-  // async function handleSubmit(e: any) {
-  //   e.preventDefault();
-
-  //   const { data, error } = await authClient.signUp.email(
-  //     {
-  //       /**
-  //        * The user email
-  //        */
-  //       email,
-  //       /**
-  //        * The user password
-  //        */
-  //       password,
-  //       /**
-  //        * remember the user session after the browser is closed.
-  //        * @default true
-  //        */
-  //       name: fullname,
-  //     },
-  //     {
-  //       onRequest: (ctx) => {
-  //         setLoading(true);
-  //       },
-  //       onSuccess: (ctx) => {
-  //         // redirect to the dashboard
-  //         //alert("Logged in successfully");
-  //         router.push('/dashboard');
-  //       },
-  //       onError: (ctx) => {
-  //         // display the error message
-  //         setError(ctx.error.message);
-  //         setLoading(false);
-  //       },
-  //     },
-  //   );
-  // }
-
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
@@ -130,7 +76,7 @@ export function SignupForm({
                 Login
               </Link>
             </div>
-            <div className="flex flex-col mt-2">
+            <div className="mt-2 flex flex-col">
               {/* <Button disabled={loading} type="submit" className="w-full">
                 {loading ? <Spinner /> : 'Sign Up'}
               </Button> */}

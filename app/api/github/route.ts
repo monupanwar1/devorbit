@@ -22,6 +22,14 @@ interface GithubRepo {
   owner: { login: string };
 }
 
+interface GithubCommit {
+  commit: {
+    author: {
+      date: string;
+    };
+  };
+}
+
 interface Insight {
   metric: string;
   value: number;
@@ -33,8 +41,8 @@ interface TopRepo {
 }
 
 interface ActivityPoint {
-  month: string;
-  events: number;
+  date: string;
+  count: number;
 }
 
 export async function GET(req: Request) {
@@ -107,8 +115,8 @@ export async function GET(req: Request) {
 
           if (!res.ok) return [];
 
-          const commits = await res.json();
-          return commits.map((c: any) => c.commit.author.date);
+          const commits: GithubCommit[] = await res.json();
+          return commits.map((commit) => commit.commit.author.date);
         } catch {
           return [];
         }
@@ -137,8 +145,8 @@ export async function GET(req: Request) {
 
     // Build final 12-month activity
     const activity: ActivityPoint[] = last12Months.map((month) => ({
-      month,
-      events: activityByMonth[month] ?? 0,
+      date: month,
+      count: activityByMonth[month] ?? 0,
     }));
 
     // Total commits
@@ -169,9 +177,10 @@ export async function GET(req: Request) {
       commitsTotal: commitCount,
       activity,
     });
-  } catch (err: any) {
-    console.error('❌ GitHub route error:', err.message || err);
-    if (err.message?.includes('rate limit')) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('❌ GitHub route error:', message);
+    if (message.includes('rate limit')) {
       return NextResponse.json(
         { error: 'GitHub API rate limit exceeded. Please try again later.' },
         { status: 429 },

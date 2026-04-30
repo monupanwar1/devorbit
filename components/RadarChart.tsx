@@ -17,17 +17,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import { InsightData } from '@/types/type';
 
 export const description = 'A radar chart with GitHub user insights';
 
-interface InsightData {
-  metric: string;
-  value: number;
-}
-
 interface ChartRadarDotsProps {
   username: string;
-  data: InsightData[]; // ✅ must be passed by props
+  data: InsightData[];
 }
 
 // Static config for chart

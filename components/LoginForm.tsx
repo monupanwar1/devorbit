@@ -1,4 +1,11 @@
 'use client';
+// import { useState } from 'react';
+// import { useRouter } from 'next/navigation';
+// import { authClient } from '@/lib/auth-client';
+import { Github, Mail } from 'lucide-react';
+
+import Link from 'next/link';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -10,13 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-// import { useState } from 'react';
 
-// import { useRouter } from 'next/navigation';
-
-// import { authClient } from '@/lib/auth-client';
-import { Github, Mail } from 'lucide-react';
-import Link from 'next/link';
 // import { Alert, AlertDescription } from './ui/alert';
 // import { Spinner } from './ui/spinner';
 
@@ -92,16 +93,12 @@ export function LoginForm({
           )} */}
           <form>
             <div className="flex flex-col gap-6">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <Button
-                  variant="outline"
-                  className="rounded-md
-            "
-                >
-                  <Github className="w-5 h-5 text-neutral-950" /> Github
+              <div className="mb-4 flex items-center justify-center gap-2">
+                <Button variant="outline" className="rounded-md">
+                  <Github className="h-5 w-5 text-neutral-950" /> Github
                 </Button>
                 <Button variant="outline" className="rounded-md">
-                  <Mail className="w-5 h-5 text-neutral-950" /> Google
+                  <Mail className="h-5 w-5 text-neutral-950" /> Google
                 </Button>
               </div>
               <div className="grid gap-3">

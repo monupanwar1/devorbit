@@ -1,5 +1,7 @@
 'use client';
 
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+
 import {
   Card,
   CardContent,
@@ -12,7 +14,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 interface RepoData {
   repo: string;
@@ -30,19 +31,19 @@ export function RepoCommitChart({ username, data }: RepoCommitChartProps) {
   const totalCommits = data.reduce((sum, d) => sum + (d.commits || 0), 0);
 
   return (
-    <Card className="py-0 border rounded-xl shadow-sm">
-      <CardHeader className="flex flex-col sm:flex-row justify-between border-b p-4 sm:p-6">
+    <Card className="rounded-xl border py-0 shadow-sm">
+      <CardHeader className="flex flex-col justify-between border-b p-4 sm:flex-row sm:p-6">
         <div className="space-y-1">
           <CardTitle className="text-lg font-semibold">
             Top Repositories by Commits
           </CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">
+          <CardDescription className="text-muted-foreground text-sm">
             Showing recent commit activity for <strong>{username}</strong>
           </CardDescription>
         </div>
         <div className="text-right">
-          <p className="text-xs text-muted-foreground">Total commits</p>
-          <p className="text-2xl font-bold text-primary">
+          <p className="text-muted-foreground text-xs">Total commits</p>
+          <p className="text-primary text-2xl font-bold">
             {totalCommits.toLocaleString()}
           </p>
         </div>
@@ -50,7 +51,7 @@ export function RepoCommitChart({ username, data }: RepoCommitChartProps) {
 
       <CardContent className="p-4 sm:p-6">
         {data.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">
+          <p className="text-muted-foreground py-8 text-center text-sm">
             No commit data available.
           </p>
         ) : (

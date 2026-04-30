@@ -17,19 +17,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import { Activity } from '@/types/type';
 
 export const description = 'GitHub Activity Chart';
 
-interface ActivityData {
-  month: string; // e.g. "2025-10"
-  events: number;
-}
-
 interface ChartLineDefaultProps {
   username: string;
-  data: ActivityData[];
+  data: Activity[];
 }
-
 // Chart color config
 const chartConfig = {
   activity: {
@@ -40,10 +35,10 @@ const chartConfig = {
 
 export function ChartLineDefault({ username, data }: ChartLineDefaultProps) {
   const sortedData = [...data].sort((a, b) =>
-    a.month > b.month ? 1 : a.month < b.month ? -1 : 0,
+    a.date > b.date ? 1 : a.date < b.date ? -1 : 0,
   );
 
-  const totalEvents = sortedData.reduce((sum, item) => sum + item.events, 0);
+  const totalEvents = sortedData.reduce((sum, item) => sum + item.count, 0);
 
   return (
     <Card>
@@ -66,35 +61,33 @@ export function ChartLineDefault({ username, data }: ChartLineDefaultProps) {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(month) => {
-                const [year, m] = month.split('-');
-                return new Date(`${year}-${m}-01`).toLocaleDateString('en-US', {
+              tickFormatter={(date) =>
+                new Date(date).toLocaleDateString('en-US', {
                   month: 'short',
-                });
-              }}
+                })
+              }
             />
             <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
                   hideLabel
-                  nameKey="events"
-                  labelFormatter={(month) => {
-                    const [year, m] = month.split('-');
-                    return new Date(`${year}-${m}-01`).toLocaleDateString(
-                      'en-US',
-                      { month: 'long', year: 'numeric' },
-                    );
-                  }}
+                  nameKey="count"
+                  labelFormatter={(date) =>
+                    new Date(date).toLocaleDateString('en-US', {
+                      month: 'long',
+                      year: 'numeric',
+                    })
+                  }
                 />
               }
             />
             <Line
-              dataKey="events"
+              dataKey="count"
               type="natural"
               stroke="var(--color-activity)"
               strokeWidth={2}
