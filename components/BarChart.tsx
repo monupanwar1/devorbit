@@ -23,11 +23,11 @@ interface RepoData {
 }
 
 interface RepoCommitChartProps {
-  username: string;
+  // username: string;
   data: RepoData[]; // ✅ data must be passed as props
 }
 
-export function RepoCommitChart({ username, data }: RepoCommitChartProps) {
+export function RepoCommitChart({ data }: RepoCommitChartProps) {
   const totalCommits = data.reduce((sum, d) => sum + (d.commits || 0), 0);
 
   return (
@@ -38,15 +38,13 @@ export function RepoCommitChart({ username, data }: RepoCommitChartProps) {
             Top Repositories by Commits
           </CardTitle>
           <CardDescription className="text-muted-foreground text-sm">
-            Showing recent commit activity for <strong>{username}</strong>
+            <p className="text-muted-foreground text-xs">Total commits</p>
+            <p className="text-primary text-2xl font-bold">
+              {totalCommits.toLocaleString()}
+            </p>
           </CardDescription>
         </div>
-        <div className="text-right">
-          <p className="text-muted-foreground text-xs">Total commits</p>
-          <p className="text-primary text-2xl font-bold">
-            {totalCommits.toLocaleString()}
-          </p>
-        </div>
+        <div className="text-right"></div>
       </CardHeader>
 
       <CardContent className="p-4 sm:p-6">

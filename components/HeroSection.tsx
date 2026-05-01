@@ -19,7 +19,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="mb-4 text-5xl font-bold tracking-tight text-[#082546] md:text-7xl"
+        className="font-poppins mb-4 text-5xl font-bold tracking-tight text-[#082546] md:text-7xl"
       >
         DevOrbit
       </motion.h1>
@@ -28,7 +28,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="max-w-2xl text-lg text-[#7E8696] md:text-xl"
+        className="font-inter max-w-2xl text-lg text-[#7E8696] md:text-xl"
       >
         Turn your GitHub activity into a live dashboard — powered by AI
         insights, trends, and reports. Built for developers, by developers.

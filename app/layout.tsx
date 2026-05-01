@@ -1,19 +1,44 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Inter, Lexend, Montserrat, Poppins, Roboto } from 'next/font/google';
 
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+export const poppins = Poppins({
   subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-poppins',
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+export const lexend = Lexend({
   subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-lexend',
+  display: 'swap',
+});
+
+export const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-montserrat',
+  display: 'swap',
+});
+
+export const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-roboto',
+  display: 'swap',
+});
+
+export const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-inter',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -29,7 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} ${lexend.variable} ${montserrat.variable} ${roboto.variable} ${inter.variable}`}
       >
         <Navbar />
         {children}

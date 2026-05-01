@@ -4,9 +4,6 @@ interface GithubUser {
   avatar_url: string;
   login: string;
   html_url: string;
-  email: string | null;
-  blog: string | null;
-  location: string | null;
   name: string | null;
   bio: string | null;
   followers: number;
@@ -14,21 +11,17 @@ interface GithubUser {
   public_repos: number;
 }
 
-interface GithubRepo {
-  name: string;
-  stargazers_count: number;
-  forks_count: number;
-  updated_at: string;
-  owner: { login: string };
-}
-
-interface GithubCommit {
-  commit: {
-    author: {
-      date: string;
-    };
+type GitHubEvent = {
+  type: string;
+  created_at: string;
+  repo?: {
+    name?: string;
   };
-}
+  payload?: {
+    commits?: { message: string }[];
+    distinct_size?: number;
+  };
+};
 
 interface Insight {
   metric: string;
@@ -48,128 +41,135 @@ interface ActivityPoint {
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const username = searchParams.get('username');
-  if (!username)
-    return NextResponse.json({ error: 'Username required' }, { status: 400 });
 
-  const headers = {
+  if (!username) {
+    return NextResponse.json({ error: 'Username required' }, { status: 400 });
+  }
+
+  // 🔐 Safe headers (token optional)
+  const token = process.env.GITHUB_TOKEN;
+
+  const headers: HeadersInit = {
     'User-Agent': 'DevOrbitApp',
     Accept: 'application/vnd.github+json',
   };
 
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   try {
-    // Fetch user info
+    // =========================
+    // 🚀 1. USER DATA
+    // =========================
     const userRes = await fetch(`https://api.github.com/users/${username}`, {
-      cache: 'no-store',
       headers,
+      cache: 'no-store',
     });
 
-    if (userRes.status === 403) {
-      const body = await userRes.json();
-      if (body.message?.includes('API rate limit exceeded')) {
-        return NextResponse.json(
-          { error: 'GitHub API rate limit exceeded. Please try again later.' },
-          { status: 429 },
-        );
-      }
-    }
-
-    if (!userRes.ok)
+    if (!userRes.ok) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
 
     const user: GithubUser = await userRes.json();
 
-    // Fetch repos
-    const repoRes = await fetch(
-      `https://api.github.com/users/${username}/repos?per_page=10&sort=pushed&type=owner`,
-      { cache: 'no-store', headers },
+    // =========================
+    // 🚀 2. EVENTS DATA
+    // =========================
+    const eventsRes = await fetch(
+      `https://api.github.com/users/${username}/events?per_page=100`,
+      { headers, cache: 'no-store' },
     );
 
-    if (!repoRes.ok)
+    if (!eventsRes.ok) {
       return NextResponse.json(
-        { error: 'Failed to fetch repositories' },
+        { error: 'Failed to fetch events' },
         { status: 500 },
       );
-
-    const repos: GithubRepo[] = await repoRes.json();
-
-    let stars = 0;
-    let forks = 0;
-
-    for (const repo of repos) {
-      stars += repo.stargazers_count || 0;
-      forks += repo.forks_count || 0;
     }
 
-    // Create "since" date (12 months ago)
-    const since = new Date();
-    since.setFullYear(since.getFullYear() - 1);
+    const events: GitHubEvent[] = await eventsRes.json(); //
 
-    // Fetch commits for each repo (12 months only)
-    const commitStats = await Promise.all(
-      repos.map(async (repo) => {
-        try {
-          const res = await fetch(
-            `https://api.github.com/repos/${repo.owner.login}/${repo.name}/commits?since=${since.toISOString()}`,
-            { headers },
-          );
+    // Debug (optional)
+    // const pushEvents = events.filter((e) => e.type === 'PushEvent');
+    // console.log('📊 DEBUG:', {
+    //   totalEvents: events.length,
+    //   pushEvents: pushEvents.length,
+    // });
 
-          if (!res.ok) return [];
-
-          const commits: GithubCommit[] = await res.json();
-          return commits.map((commit) => commit.commit.author.date);
-        } catch {
-          return [];
-        }
-      }),
-    );
-
-    // Flatten commit dates
-    const allCommitDates = commitStats.flat();
-
-    // Group by month
+    // =========================
+    // 🔥 PROCESS DATA
+    // =========================
+    let commitCount = 0;
     const activityByMonth: Record<string, number> = {};
+    const repoMap: Record<string, number> = {};
 
-    allCommitDates.forEach((date) => {
-      const month = date.slice(0, 7); // YYYY-MM
-      activityByMonth[month] = (activityByMonth[month] || 0) + 1;
+    events.forEach((event: GitHubEvent) => {
+      if (event.type === 'PushEvent') {
+        const commits =
+          event.payload?.distinct_size || event.payload?.commits?.length || 1; // fallback
+
+        const month = event.created_at?.slice(0, 7);
+
+        const repoFull = event.repo?.name;
+        const repo = repoFull?.split('/')[1]; // clean repo name
+
+        commitCount += commits;
+
+        if (month) {
+          activityByMonth[month] = (activityByMonth[month] || 0) + commits;
+        }
+
+        if (repo) {
+          repoMap[repo] = (repoMap[repo] || 0) + commits;
+        }
+      }
     });
 
-    // Generate last 12 months
+    // =========================
+    // 📅 LAST 3 MONTHS ACTIVITY
+    // =========================
     const now = new Date();
-    const last12Months = Array.from({ length: 12 }).map((_, i) => {
-      const d = new Date(now.getFullYear(), now.getMonth() - (11 - i), 1);
+
+    const lastMonths = Array.from({ length: 3 }).map((_, i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (2 - i), 1);
+
       const year = d.getFullYear();
       const month = String(d.getMonth() + 1).padStart(2, '0');
+
       return `${year}-${month}`;
     });
 
-    // Build final 12-month activity
-    const activity: ActivityPoint[] = last12Months.map((month) => ({
+    const activity: ActivityPoint[] = lastMonths.map((month) => ({
       date: month,
       count: activityByMonth[month] ?? 0,
     }));
 
-    // Total commits
-    const commitCount = allCommitDates.length;
-
-    const insights: Insight[] = [
-      { metric: 'Repos', value: repos.length },
-      { metric: 'Stars', value: stars },
-      { metric: 'Forks', value: forks },
-      { metric: 'Followers', value: user.followers ?? 0 },
-      { metric: 'Following', value: user.following ?? 0 },
-      { metric: 'Commits', value: commitCount },
-    ];
-
-    // Top repos by commit count
-    const topRepos: TopRepo[] = repos
-      .map((repo, i) => ({
-        repo: repo.name,
-        commits: commitStats[i]?.length || 0,
-      }))
+    // =========================
+    // 🏆 TOP REPOS
+    // =========================
+    let topRepos: TopRepo[] = Object.entries(repoMap)
+      .map(([repo, commits]) => ({ repo, commits }))
       .sort((a, b) => b.commits - a.commits)
       .slice(0, 5);
 
+    if (topRepos.length === 0) {
+      topRepos = [{ repo: 'No recent activity', commits: 0 }];
+    }
+
+    // =========================
+    // 📊 INSIGHTS
+    // =========================
+    const insights: Insight[] = [
+      { metric: 'Followers', value: user.followers ?? 0 },
+      { metric: 'Following', value: user.following ?? 0 },
+      { metric: 'Repos', value: user.public_repos ?? 0 },
+      { metric: 'Commits', value: commitCount },
+    ];
+
+    // =========================
+    // ✅ FINAL RESPONSE
+    // =========================
     return NextResponse.json({
       user,
       insights,
@@ -179,13 +179,9 @@ export async function GET(req: Request) {
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error('❌ GitHub route error:', message);
-    if (message.includes('rate limit')) {
-      return NextResponse.json(
-        { error: 'GitHub API rate limit exceeded. Please try again later.' },
-        { status: 429 },
-      );
-    }
+
+    console.error('❌ GitHub API error:', message);
+
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 },

@@ -41,7 +41,7 @@ export default function UserCard({ user }: UserCardProps) {
   }
 
   return (
-    <section className="mx-auto w-full max-w-7xl">
+    <section className="shadow-t-2xl mx-auto w-full max-w-7xl shadow-neutral-900">
       <Card className="p-4 shadow-sm">
         {/* Header */}
         <CardHeader className="flex flex-row items-center space-x-4">

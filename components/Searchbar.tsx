@@ -111,17 +111,17 @@ export default function Searchbar() {
       </div>
 
       {/* 📊 Results */}
-      <div className="w-full gap-4">
+      <div className="w-full gap-4 space-y-4">
         <UserCard user={user} />
 
         {analytics && (
-          <>
-            <RepoCommitChart username={username} data={analytics.topRepos} />
+          <div className="flex flex-col space-y-4">
+            <RepoCommitChart data={analytics.topRepos} />
 
             <ChartRadarDots username={username} data={analytics.insights} />
 
             <ChartLineDefault username={username} data={analytics.activity} />
-          </>
+          </div>
         )}
       </div>
     </section>
