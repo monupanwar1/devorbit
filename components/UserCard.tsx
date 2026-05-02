@@ -9,6 +9,8 @@ import {
   Users,
 } from 'lucide-react';
 
+import { useRouter } from 'next/navigation';
+
 import { GithubUser } from '@/types/type';
 
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -25,6 +27,13 @@ interface UserCardProps {
 }
 
 export default function UserCard({ user }: UserCardProps) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (!user?.login) return;
+    router.push(`/dashboard/summary/${user?.login}`);
+  };
+
   // ✅ Handle null / undefined safely
   if (!user) {
     return (
@@ -64,7 +73,10 @@ export default function UserCard({ user }: UserCardProps) {
           </div>
 
           <div>
-            <Button className="bg-accent flex items-center justify-center rounded-md px-4 py-2 font-medium hover:bg-gray-200">
+            <Button
+              onClick={handleClick}
+              className="bg-accent flex items-center justify-center rounded-md px-4 py-2 font-medium hover:bg-gray-200"
+            >
               ✨ Summarize
             </Button>
           </div>
