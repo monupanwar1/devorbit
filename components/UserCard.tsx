@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@base-ui/react';
 import {
   FolderGit2,
   Link as LinkIcon,
@@ -44,20 +45,28 @@ export default function UserCard({ user }: UserCardProps) {
     <section className="shadow-t-2xl mx-auto w-full max-w-7xl shadow-neutral-900">
       <Card className="p-4 shadow-sm">
         {/* Header */}
-        <CardHeader className="flex flex-row items-center space-x-4">
-          <Avatar className="h-20 w-20">
-            <AvatarImage src={user.avatar_url} alt={user.name ?? 'User'} />
-            <AvatarFallback>
-              {user.login?.[0]?.toUpperCase() ?? '?'}
-            </AvatarFallback>
-          </Avatar>
+        <CardHeader className="flex flex-row items-center justify-between space-x-4">
+          <div className="flex items-center justify-between space-x-4 md:space-x-6">
+            <Avatar className="h-20 w-20">
+              <AvatarImage src={user.avatar_url} alt={user.name ?? 'User'} />
+              <AvatarFallback>
+                {user.login?.[0]?.toUpperCase() ?? '?'}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <CardTitle className="text-xl font-semibold">
+                {user.name ?? 'Unknown User'}
+              </CardTitle>
+              <CardDescription className="text-muted-foreground text-sm">
+                @{user.login}
+              </CardDescription>
+            </div>
+          </div>
+
           <div>
-            <CardTitle className="text-xl font-semibold">
-              {user.name ?? 'Unknown User'}
-            </CardTitle>
-            <CardDescription className="text-muted-foreground text-sm">
-              @{user.login}
-            </CardDescription>
+            <Button className="bg-accent flex items-center justify-center rounded-md px-4 py-2 font-medium hover:bg-gray-200">
+              ✨ Summarize
+            </Button>
           </div>
         </CardHeader>
 
