@@ -1,5 +1,9 @@
-export default function SummaryPage() {
-  return (
-    <div className="container mx-auto flex flex-col px-4 py-6">SummaryPage</div>
-  );
+import SummaryView from '@/components/summary-view';
+
+export default function SummaryPage({
+  params,
+}: {
+  params: { username: string };
+}) {
+  return <SummaryView username={params.username} />;
 }

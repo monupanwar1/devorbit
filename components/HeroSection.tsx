@@ -11,7 +11,7 @@ import { Badge } from './ui/badge';
 
 export default function HeroSection() {
   return (
-    <section className="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-6 text-center">
+    <section className="font-geist flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-6 text-center">
       <Badge variant="secondary">
         <Sparkles className="text-amber-300" /> Beta Now Live! Get Early Access
       </Badge>
@@ -19,7 +19,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="font-poppins mb-4 text-5xl font-bold tracking-tight text-[#082546] md:text-7xl"
+        className="primary-text mb-4 text-3xl font-bold tracking-tight md:text-7xl"
       >
         DevOrbit
       </motion.h1>
@@ -28,7 +28,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="font-inter max-w-2xl text-lg text-[#7E8696] md:text-xl"
+        className="primary-second max-w-2xl text-[#7E8696]"
       >
         Turn your GitHub activity into a live dashboard — powered by AI
         insights, trends, and reports. Built for developers, by developers.

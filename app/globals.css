@@ -26,6 +26,20 @@
   font-display: swap;
 }
 
+.button-color {
+  background-color: var(--button-color);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.primary-text {
+  color: var(--primary-text);
+}
+.secondary-text {
+  color: var(--secondary-text);
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -69,6 +83,10 @@
 }
 
 :root {
+  --primary-text: #ffffff;
+  --secondary-text: #777777;
+  --color-primary: #0a0a0a;
+  --button-color: #ff7b1e;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -169,6 +187,10 @@
 
 .font-inter {
   font-family: var(--font-inter), sans-serif;
+}
+
+.font-geist {
+  font-family: var(--font-geist), sans-serif;
 }
 
 @layer base {
