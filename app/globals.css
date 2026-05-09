@@ -27,17 +27,75 @@
 }
 
 .button-color {
-  background-color: var(--button-color);
+  background-color: var(--color-orange-500);
 }
 
-.bg-primary {
-  background-color: var(--color-primary);
+/* Text */
+
+.button-text {
+  color: var(--color-orange-500);
 }
+
 .primary-text {
-  color: var(--primary-text);
+  color: var(--color-white);
 }
+
 .secondary-text {
-  color: var(--secondary-text);
+  color: var(--color-neutral-300);
+}
+
+.secondary-text-muted {
+  color: var(--color-neutral-400);
+}
+
+.muted-text {
+  color: var(--neutral-500);
+}
+
+/* Backgrounds */
+
+.bg-primary {
+  background-color: var(--color-neutral-950);
+}
+
+.bg-secondary {
+  background-color: var(--neutral-900);
+}
+
+.bg-card {
+  background-color: var(--neutral-900);
+}
+
+/* Borders */
+
+.border-primary {
+  border-color: var(--neutral-800);
+}
+
+.border-secondary {
+  border-color: var(--neutral-700);
+}
+
+.bg-vimium {
+  background-color: var(--vimium-background-color);
+}
+
+.bg-vimium-foreground {
+  background-color: var(--vimium-foreground-color);
+}
+
+/* Text */
+
+.text-vimium {
+  color: var(--vimium-background-text-color);
+}
+
+.text-vimium-foreground {
+  color: var(--vimium-foreground-text-color);
+}
+
+.text-vimium-link {
+  color: var(--vimium-link-color);
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -80,13 +138,40 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-blink-cursor: blink-cursor 1.2s step-end infinite;
+  @keyframes blink-cursor {
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
 }
 
 :root {
-  --primary-text: #ffffff;
-  --secondary-text: #777777;
   --color-primary: #0a0a0a;
-  --button-color: #ff7b1e;
+  --button-color: #ff7b1f;
+  --color-white: #ffffff;
+  --color-neutral-100: oklch(97% 0 0);
+  --color-neutral-200: oklch(92.2% 0 0);
+  --color-neutral-300: oklch(87% 0 0);
+  --color-neutral-400: oklch(70.8% 0 0);
+  --color-neutral-500: oklch(55.6% 0 0);
+  --color-neutral-700: oklch(37.1% 0 0);
+  --color-neutral-800: oklch(26.9% 0 0);
+  --color-neutral-900: oklch(20.5% 0 0);
+  --color-neutral-950: oklch(14.5% 0 0);
+  --color-orange-500: oklch(70.5% 0.213 47.604);
+  --vimium-background-color: #1d1d1f;
+  --vimium-background-text-color: #e3e3e3;
+
+  --vimium-foreground-color: #292a2d;
+  --vimium-foreground-text-color: #e8eaed;
+
+  --vimium-link-color: #8ab4f8;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

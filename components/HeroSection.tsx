@@ -1,34 +1,43 @@
 'use client';
 
+import { ArrowRightIcon } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
-import Link from 'next/link';
-
-import { Button } from '@/components/ui/button';
-
+import BaseButton from './common/base-button';
 import { Badge } from './ui/badge';
+import { TypingAnimation } from './ui/typing-animation';
 
 export default function HeroSection() {
   return (
     <section className="font-geist flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-6 text-center">
-      <Badge variant="secondary">
+      <Badge className="primary-text font-geist outline">
         <Sparkles className="text-amber-300" /> Beta Now Live! Get Early Access
       </Badge>
       <motion.h1
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="primary-text mb-4 text-3xl font-bold tracking-tight md:text-7xl"
+        className="primary-text mb-4 max-w-5xl text-3xl leading-6 font-bold tracking-tight md:text-5xl"
       >
-        DevOrbit
+        Build Your Developer{' '}
+        <span>
+          {' '}
+          <TypingAnimation
+            className="button-text"
+            words={['Identity', 'Profile', ' Analytics', 'Insight']}
+            loop
+          />
+        </span>
+        <br />
+        With AI-Powered Reports
       </motion.h1>
 
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="primary-second max-w-2xl text-[#7E8696]"
+        className="secondary-text-muted mt-4 max-w-xl text-center tracking-tight"
       >
         Turn your GitHub activity into a live dashboard — powered by AI
         insights, trends, and reports. Built for developers, by developers.
@@ -53,12 +62,12 @@ export default function HeroSection() {
         transition={{ delay: 0.4, duration: 0.6 }}
         className="flex gap-4"
       >
-        <Link href="/dashboard">
-          <Button className="#0A2B57 rounded-xl px-6 py-3 text-lg font-semibold transition-all">
-            Get Started
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </Link>
+        <BaseButton className="rounded-lg px-4" href="#">
+          Get started{' '}
+          <span>
+            <ArrowRightIcon size={16} />
+          </span>
+        </BaseButton>
       </motion.div>
     </section>
   );

@@ -1,8 +1,9 @@
 'use client';
-import { Button } from '@base-ui/react';
 import { GithubLogoIcon } from '@phosphor-icons/react';
 
 import Link from 'next/link';
+
+import BaseButton from './common/base-button';
 
 export default function Navbar() {
   return (
@@ -15,25 +16,13 @@ export default function Navbar() {
           DevOrbit
         </Link>
         <div className="font-geist flex items-center space-x-6 font-normal">
-          <Button>
-            <Link
-              href="#"
-              className="button-color flex items-center gap-2 rounded-md px-8 py-1 text-black"
-            >
-              <span>
-                <GithubLogoIcon size={17} />
-              </span>
-              Star on Github
-            </Link>
-          </Button>
-          <Button>
-            <Link
-              href="#"
-              className="button-color flex items-center gap-2 rounded-md px-8 py-1 text-black"
-            >
-              Signup
-            </Link>
-          </Button>
+          <BaseButton href="#">
+            <span>
+              <GithubLogoIcon size={17} />
+            </span>
+            Star on Github
+          </BaseButton>
+          <BaseButton href="#">Sign In</BaseButton>
         </div>
       </nav>
     </header>
